@@ -35,7 +35,7 @@ boardSection.addEventListener('click', handleBoardClick)
 /*-------------------------------- Functions --------------------------------*/
 function init() {
     // init boardSquares to 9 nulls
-    boardSquares = [-1, -1, -1, null, 1, -1, 1, -1, -1,]
+    boardSquares = [-1, 1, -1, 1, -1, 1, 1, -1, 1,]
     
     // init turn
     turn = 1 
@@ -98,21 +98,8 @@ function getWinner() {
             return boardSquares[winningCombinations[i][0]]
         }
     }
+    return (boardSquares.some((square) => square === null)) ? null : 'T'
 }
-
-// [ ] 5.6) Set the winner variable if there's a winner by calling a new function: getWinner.
-	  // The getWinner function will...
-
-		  // [x] 5.6.1.1) Loop through the each of the winning combination arrays defined.
-		  // [x] 5.6.1.2) Total up the three board positions using the three indexes in the current combo.
-		  // [x] 5.6.1.3) Convert the total to an absolute value (convert any negative total to positive).
-		  // [x] 5.6.1.4) If the total equals 3, we have a winner! Set the winner variable to the board's value at the index specified by the first index of that winning combination's array by returning that value.
-
-		// 5.6.3) Next, If there's no winner, check if there's a tie:
-
-		// 5.6.4) Set the winner varible to "T" if there are no more nulls in the board array by returning the string "T".
-	  
-		// 5.6.5) Otherwise return null.
 
 /*-------------------------------- Main --------------------------------*/
 init()
