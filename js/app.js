@@ -42,6 +42,7 @@ function init() {
 
     // init winState to null
     winState = null
+
     // render
     render()
 }
@@ -70,6 +71,7 @@ function renderGameStateMessage() {
         gameStatus.textContent = 'Tie game!'
     } else {
         gameStatus.textContent = (winState > 0) ? "X wins!" : "O's wins!"
+        confetti.start(2000)
     }
 }
 
