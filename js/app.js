@@ -35,7 +35,7 @@ boardSection.addEventListener('click', handleBoardClick)
 /*-------------------------------- Functions --------------------------------*/
 function init() {
     // init boardSquares to 9 nulls
-    boardSquares = [-1, 1, -1, 1, -1, 1, 1, -1, 1,]
+    boardSquares = [null, null, null, null, null, null, null, null, null,]
     
     // init turn
     turn = 1 
@@ -43,11 +43,17 @@ function init() {
     // init winState to null
     winState = null
     // render
+    render()
+}
+
+
+function render() {
     renderBoard()
+    renderGameStateMessage()
 }
 
 function renderBoard() {
-    sqrElements.forEach( (sqr, idx) => {
+    sqrElements.forEach((sqr, idx) => {
         let boardSqr = boardSquares[idx]
         if(boardSqr) { // not null
             sqr.textContent = (boardSqr > 0 ) ?  'X' : 'O'
@@ -82,7 +88,8 @@ function handleBoardClick(eventObject) {
 
     boardSquares[id] = turn
     turn *= -1
-
+    winState = getWinner()
+    render()
 }
 
 function stripElementIdForIndex(element) {
