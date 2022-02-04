@@ -27,10 +27,11 @@ let boardSquares, turn, winState
 const sqrElements = document.querySelectorAll('.sq') // Returns a node-list
 const gameStatus = document.querySelector('#message')
 const boardSection = document.querySelector('.board')
+const replayBtn = document.querySelector('#replay')
 
 /*----------------------------- Event Listeners -----------------------------*/
 boardSection.addEventListener('click', handleBoardClick)
-
+replayBtn.addEventListener('click', init)
 
 /*-------------------------------- Functions --------------------------------*/
 function init() {
@@ -49,8 +50,9 @@ function init() {
 
 
 function render() {
-    renderBoard()
     renderGameStateMessage()
+    renderReplayButton()
+    renderBoard()
 }
 
 function renderBoard() {
@@ -75,6 +77,13 @@ function renderGameStateMessage() {
     }
 }
 
+function renderReplayButton() {
+    if(winState === null) {
+        replayBtn.setAttribute('hidden', true)
+    } else {
+        replayBtn.removeAttribute('hidden')
+    }
+}
 
 function handleBoardClick(eventObject) {
     let id = stripElementIdForIndex(eventObject.target)
