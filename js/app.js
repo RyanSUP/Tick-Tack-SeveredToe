@@ -5,6 +5,7 @@
  * [ ] render token and crown when winner
  * [ ] after a delay, fade all images on the board
  * [ ] Fill board with 'N E W G A M E
+ * [x] fix bug that allows you to click unselected game token during game
  */
 
 
@@ -76,6 +77,7 @@ function initGameTokens() {
 }
 
 function render() {
+    renderTurnIndicator()
     renderMessage()
     renderReplayButton()
     renderBoard()
@@ -90,6 +92,19 @@ function renderBoard() {
             sqr.innerHTML = ''
         }
     })
+}
+
+function renderTurnIndicator() {
+    if(firstPlayerToken !== null && secondPlayerToken !== null) {
+        if(turn > 0) {
+            document.querySelector('.player-1').classList.remove('turn')
+            document.querySelector('.player1').classList.add('turn')
+        } else {
+            document.querySelector('.player1').classList.remove('turn')
+            document.querySelector('.player-1').classList.add('turn')
+        }
+    }
+
 }
 
 function renderMessage() {
@@ -170,9 +185,16 @@ function getWinner() {
 }
 
 function setGameToken(eventObject) {
+    // Don't do anything if both players selected a token
+    if(firstPlayerToken && secondPlayerToken) {
+        return
+    }
+
     if(eventObject.target.className === 'selectable') {
-        // Remove selectable class from the selected token, this way it can't be chosen twice.
+        // Remove selectable class from the gameToken, this way it can't be chosen twice.
         eventObject.target.classList.remove('selectable')
+        // Add the player's turn number to the gameToken as a class. This will be used for the turn indicator and can potentially be used to target the winner's pieces so they animate at the end.
+        eventObject.target.classList.add(`player${turn}`)
         
         // init chosen token
         let chosenToken = eventObject.target.cloneNode()

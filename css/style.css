@@ -13,15 +13,17 @@ body {
 }
 
 #message {
-  margin: 60px 0 40px 0;
+  margin: 40px 0 40px 0;
   font-size: 50px;
   color: white;
   font-family: 'Lobster', cursive;
 }
 
 header img{
-  margin: 100px 20px 0 ;
+  margin: 100px 20px 0;
+  padding-bottom: 5px;
   width: 96px;
+  border-bottom: 15px solid #84DCC6;
 }
 
 section.board {
@@ -54,4 +56,9 @@ div:hover {
 .token {
   vertical-align: middle;
   width: 64px;
+}
+
+.turn {
+  border-radius: 20%;
+  border-bottom: 15px solid #ff686b;
 }
