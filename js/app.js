@@ -1,11 +1,6 @@
 /**
- * [ ] Replace the x and o with images
- * [x] Allow user to select tic, tac, or toe as a token
- *      [x] Users should not be able to select the same token
- *      [x] Users cannot pick a new token once the game starts
- *      [x] Prompt user with message (bonus points for using animation!)
- * [ ] Update message to display the token instead of x o (I think I;m going to underline the current player)
- * [ ] Give player token a classname of token / remove selectable (try setting tokens = to html element instead of outerhtml)
+ * [ ] Hide message when game starts
+ * [ ] indicate player by adding a border to the current player's token (in the game title)
  */
 
 
@@ -38,7 +33,7 @@ const sqrElements = document.querySelectorAll('.sq') // Returns a node-list
 const message = document.querySelector('#message')
 const boardSection = document.querySelector('.board')
 const replayBtn = document.querySelector('#replay')
-const gameTokens = document.querySelector('.token-select')
+const gameTokens = document.querySelector('header')
 
 /*----------------------------- Event Listeners -----------------------------*/
 boardSection.addEventListener('click', handleBoardClick)
@@ -94,9 +89,9 @@ function renderBoard() {
 }
 
 function renderMessage() {
+    bounceMessage() // Add animated prompt for selecting players.
     if(firstPlayerToken === null) {
         message.innerHTML = '<span>^ </span>Player 1, pick!<span> ^</span>'
-        bounceMessage() // Add animated prompt for selecting players.
     } else if(secondPlayerToken === null) {
         message.innerHTML = '<span>^ </span>Player 2, pick!<span> ^</span>'
     } else if(winState === null) {
@@ -121,15 +116,12 @@ function bounceMessage() {
     message.classList.add("animate__bounce", "animate__repeat-3", "animate__slow")
 }
 
-function resetBouncingMessage() {
-    // Don't animate forever...
-    message.classList.remove("animate__repeat-3", "animate__slow")
-    // ... but animate 2 more times
-    // message.classList.add("animate__repeat-2")
-}
-
-function hideMessage() {
-    
+function toggleMessageHidden() {
+    if(message.hasAttribute('hidden')) {
+        message.removeAttribute('hidden')
+    } else {
+        message.setAttribute('hidden', true)
+    }
 }
 
 function handleBoardClick(eventObject) {
@@ -176,16 +168,23 @@ function getWinner() {
 function setGameToken(eventObject) {
     if(eventObject.target.className === 'selectable') {
         // Remove selectable class from the selected token, this way it can't be chosen twice.
-        eventObject.target.className = ''
-
-        // Setup the player token
+        eventObject.target.classList.remove('selectable')
+        
+        // init chosen token
         let chosenToken = eventObject.target.cloneNode()
-        chosenToken.className = 'token'
+        chosenToken.classList.add("token")
+
+        // Animate selected token. Needs to be done last so the chosen token doesn't copy the class
+        eventObject.target.classList.add('animate__heartBeat')
+    
+        
+        // Set token to player
         if(turn > 0) {
             firstPlayerToken = chosenToken.outerHTML
         } else {
             secondPlayerToken = chosenToken.outerHTML
         }
+        
 
         // Go to the next turn so player 2 can select their token.
         nextTurn()
