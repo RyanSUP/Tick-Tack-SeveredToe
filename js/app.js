@@ -5,6 +5,7 @@
  * [ ] crown the winner
  * [ ] after a delay, fade all images on the board
  * [ ] Fill board with 'N E W G A M E
+ * [x] fix bug that displays the player picker message on player 2's turn
  * [x] fix bug that allows you to click unselected game token during game
  * [x] stop turn indicator from showing if the game is over
  */
@@ -51,9 +52,9 @@ function init() {
     // init boardSquares to 9 nulls
     boardSquares = [null, null, null, null, null, null, null, null, null,]
 
-    initGameTokens()
-
+    
     // init tokens
+    makeTokensSelectable()
     firstPlayerToken = null
     secondPlayerToken = null
 
@@ -68,13 +69,11 @@ function init() {
 }
 
 // Gives the game tokens at the top of the screen a class. This lets the players choose again if the game is reset.
-function initGameTokens() {
-    // Convert htmlColelction to array 
+function makeTokensSelectable() {
+    // Convert htmlCollection to array 
     // https://www.gavsblog.com/blog/htmlcollection-foreach-loop-convert-object-to-array-javascript
     let arr = [...gameTokens.children]
-    arr.forEach(child => {
-        child.className = 'selectable'
-    })
+    arr.forEach(child => child.className = 'selectable')
 }
 
 function render() {
@@ -98,34 +97,52 @@ function renderBoard() {
 function renderTurnIndicator() {
     if(winState !== null) {
         // Game over, clear the indicator
-        document.querySelector('.player-1').classList.remove('turn')
-        document.querySelector('.player1').classList.remove('turn')
+        clearTurnIndicators()
     } else if(firstPlayerToken !== null && secondPlayerToken !== null) {
-        if(turn > 0) {
-            document.querySelector('.player-1').classList.remove('turn')
-            document.querySelector('.player1').classList.add('turn')
-        } else {
-            document.querySelector('.player1').classList.remove('turn')
-            document.querySelector('.player-1').classList.add('turn')
-        }
+        (turn > 0) ? indicatePlayer1Turn() : indicatePlayer2Turn()
     }
+}
 
+function indicatePlayer2Turn() {
+    document.querySelector('.player1').classList.remove('turn')
+    document.querySelector('.player-1').classList.add('turn')
+}
+
+function indicatePlayer1Turn() {
+    document.querySelector('.player-1').classList.remove('turn')
+    document.querySelector('.player1').classList.add('turn')
+}
+
+function clearTurnIndicators() {
+    document.querySelector('.player-1').classList.remove('turn')
+    document.querySelector('.player1').classList.remove('turn')
 }
 
 function renderMessage() {
-    bounceMessage() // Add animated prompt for selecting players.
-    if(firstPlayerToken === null) {
-        message.innerHTML = '<span>^ </span>Player 1, pick!<span> ^</span>'
-    } else if(secondPlayerToken === null) {
-        message.innerHTML = '<span>^ </span>Player 2, pick!<span> ^</span>'
+    if(firstPlayerToken === null || secondPlayerToken === null) {
+        // New game, show message and wait for players to select tokens
+        removeMessageHidden()
+        renderPlayerSelectMessage()
     } else if(winState === null) {
-        message.textContent = (turn > 0) ? "X's turn!" : "O's turn!"
-    } else if(winState === 'T'){
+        // Game in progress, hide message
+        setMessageHidden()
+    } else if(winState === 'T') {
+        // Tie game, show the tie!
         message.textContent = 'Tie game!'
     } else {
+        // Crown the winner!
         message.textContent = (winState > 0) ? "X wins!" : "O's wins!"
         confetti.start(2000)
     }
+}
+
+function renderPlayerSelectMessage() {
+    bounceMessage() // Add animated prompt for selecting players.
+    if(firstPlayerToken === null) {
+        message.innerHTML = '<span>^ </span>Player 1, pick!<span> ^</span>'
+    } else {
+        message.innerHTML = '<span>^ </span>Player 2, pick!<span> ^</span>'
+    } 
 }
 
 function renderReplayButton() {
@@ -140,12 +157,12 @@ function bounceMessage() {
     message.classList.add("animate__bounce", "animate__repeat-3", "animate__slow")
 }
 
-function toggleMessageHidden() {
-    if(message.hasAttribute('hidden')) {
-        message.removeAttribute('hidden')
-    } else {
-        message.setAttribute('hidden', true)
-    }
+function setMessageHidden() {
+    message.setAttribute('hidden', true)
+}
+
+function removeMessageHidden() {
+    message.removeAttribute('hidden')
 }
 
 function handleBoardClick(eventObject) {

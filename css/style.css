@@ -23,7 +23,7 @@ header img{
   margin: 100px 20px 0;
   padding-bottom: 5px;
   width: 96px;
-  border-bottom: 15px solid #84DCC6;
+  border-bottom: 12px solid inherit;
 }
 
 section.board {
@@ -50,7 +50,7 @@ span {
 }
 
 div:hover {
-  background-color: #84DCC6;
+  background-color: inherit;
 }
 
 .token {
@@ -59,6 +59,5 @@ div:hover {
 }
 
 .turn {
-  border-radius: 20%;
-  border-bottom: 15px solid #ff686b;
+  border-bottom: 12px solid #ff686b;
 }
