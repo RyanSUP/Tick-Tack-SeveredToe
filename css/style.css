@@ -1,5 +1,8 @@
+/* https://coolors.co/palette/d9ffee-a5ffd6-84dcc6-ff686b-ffa69e-ffddd9 */
+
 body {
   text-align: center;
+  background-color: #84DCC6;
 	/* Use a system font, if none are available use an available sans-sarif   font */
 	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
 		Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
@@ -9,8 +12,15 @@ body {
   flex-direction: column;
 }
 
+#message {
+  margin: 75px 0 50px 0;
+  font-size: 50px;
+  color: #D9FFEE;
+  font-family: 'Lobster', cursive;
+}
+
 .title img {
-  margin: 50px 20px 0 ;
+  margin: 125px 20px 0 ;
   width: 128px;
 }
 
@@ -19,11 +29,11 @@ section.board {
   display: grid;
   grid-template-rows: repeat(3, 10vmin);
   grid-template-columns: repeat(3, 10vmin);
-  grid-gap: 0vmin;
+  grid-gap: 0.5vmin;
 }
 
 div {
-  border: 3px solid black;
+  background-color: #D9FFEE;
   font-size: 8vmin;
   text-align: center;
   vertical-align: middle;
