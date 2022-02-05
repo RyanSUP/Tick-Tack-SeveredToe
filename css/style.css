@@ -27,6 +27,17 @@ header img{
   width: 96px;
 }
 
+header {
+  position: relative;
+}
+
+.ties {
+  position: absolute;
+  left: 50%;
+  top: 40px;
+  transform: translate(-50%, 0);
+}
+
 section.board {
   margin: 0 auto;
   border: 4px dotted white;
@@ -37,7 +48,7 @@ section.board {
   grid-gap: 0.5vmin;
 }
 
-div {
+.sq {
   background-color: white;
   /* Can't see the border unless hovering. */
   /* If the border is only in the hover, the contained image will shift a little, */
@@ -50,7 +61,7 @@ span {
   color: #ff686b;
 }
 
-div:hover {
+.sq:hover {
   background-color: inherit;
 }
 

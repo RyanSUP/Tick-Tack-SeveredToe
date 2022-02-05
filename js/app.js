@@ -1,9 +1,6 @@
 /**
- * [x] Hide message when game starts
- * [x] indicate player by adding a border to the current player's token (in the game title)
  * [ ] render tie on tie game
  * [ ] crown the winner
- * [ ] after a delay, fade all images on the board
  * [ ] Fill board with 'N E W G A M E
  */
 
@@ -13,6 +10,7 @@ const message = document.querySelector('#message')
 const boardSection = document.querySelector('.board')
 const replayBtn = document.querySelector('#replay')
 const header = document.querySelector('header')
+const ties = document.querySelector('.ties')     
 
 /*----------------------------- Event Listeners -----------------------------*/
 boardSection.addEventListener('click', handleBoardClick)
@@ -42,6 +40,7 @@ const winningCombinations = [
 // Convert htmlCollection to array 
 // (https://www.gavsblog.com/blog/htmlcollection-foreach-loop-convert-object-to-array-javascript)
 const headerChildren = [...header.children]
+headerChildren.pop() // Get rid of the duplicate ties (workaround for now)
 
 /*---------------------------- Variables (state) ----------------------------*/
 // turn 1 = X, turn -1 = O
@@ -55,6 +54,8 @@ function init() {
     // init boardSquares to 9 nulls
     boardSquares = [null, null, null, null, null, null, null, null, null,]
     
+    // Hide the ties (when replay button is pressed)
+
     // init tokens
     makeHeaderChildrenSelectable()
     firstPlayerToken = null
@@ -62,6 +63,9 @@ function init() {
 
     // init turn
     turn = 1 
+
+    // Reset turn indicator (opacity on tokens)
+    resetTurnIndicator()
 
     // init winState to null
     winState = null
@@ -72,8 +76,13 @@ function init() {
 
 // Gives the game tokens at the top of the screen a class. This lets the players choose again if the game is reset.
 function makeHeaderChildrenSelectable() {
-    headerChildren.forEach(child => child.className = 'selectable')
+    headerChildren.forEach(child =>  child.className = 'selectable')
 }
+
+function renderTie() {
+    ties.removeAttribute('hidden')
+}
+
 
 
 function render() {
@@ -103,6 +112,10 @@ function renderTurnIndicator() {
     })
 }
 
+function resetTurnIndicator() {
+    headerChildren.forEach(child => child.style.opacity = '100%')
+}
+
 function renderMessage() {
     if(firstPlayerToken === null || secondPlayerToken === null) {
         // New game, show message and wait for players to select tokens
@@ -113,7 +126,9 @@ function renderMessage() {
         renderTurnIndicator()
     } else if(winState === 'T') {
         // Tie game, show the tie!
-        message.textContent = 'Tie game!'
+        resetTurnIndicator()
+        message.textContent = 'Tie Game!'
+        renderTie()
     } else {
         // Crown the winner!
         message.textContent = (winState > 0) ? "X wins!" : "O's wins!"
