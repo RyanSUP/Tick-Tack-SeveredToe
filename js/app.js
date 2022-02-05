@@ -2,10 +2,11 @@
  * [ ] Hide message when game starts
  * [ ] indicate player by adding a border to the current player's token (in the game title)
  * [ ] render tie on tie game
- * [ ] render token and crown when winner
+ * [ ] crown the winner
  * [ ] after a delay, fade all images on the board
  * [ ] Fill board with 'N E W G A M E
  * [x] fix bug that allows you to click unselected game token during game
+ * [x] stop turn indicator from showing if the game is over
  */
 
 
@@ -66,6 +67,7 @@ function init() {
     render()
 }
 
+// Gives the game tokens at the top of the screen a class. This lets the players choose again if the game is reset.
 function initGameTokens() {
     // Convert htmlColelction to array 
     // https://www.gavsblog.com/blog/htmlcollection-foreach-loop-convert-object-to-array-javascript
@@ -73,13 +75,12 @@ function initGameTokens() {
     arr.forEach(child => {
         child.className = 'selectable'
     })
-
 }
 
 function render() {
-    renderTurnIndicator()
     renderMessage()
     renderReplayButton()
+    renderTurnIndicator()
     renderBoard()
 }
 
@@ -95,7 +96,11 @@ function renderBoard() {
 }
 
 function renderTurnIndicator() {
-    if(firstPlayerToken !== null && secondPlayerToken !== null) {
+    if(winState !== null) {
+        // Game over, clear the indicator
+        document.querySelector('.player-1').classList.remove('turn')
+        document.querySelector('.player1').classList.remove('turn')
+    } else if(firstPlayerToken !== null && secondPlayerToken !== null) {
         if(turn > 0) {
             document.querySelector('.player-1').classList.remove('turn')
             document.querySelector('.player1').classList.add('turn')
