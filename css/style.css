@@ -20,21 +20,24 @@ body {
 }
 
 .title img {
-  margin: 125px 20px 0 ;
-  width: 128px;
+  margin: 100px 20px 0 ;
+  width: 96px;
 }
 
 section.board {
   margin: 0 auto;
   display: grid;
-  grid-template-rows: repeat(3, 10vmin);
-  grid-template-columns: repeat(3, 10vmin);
+  grid-template-rows: repeat(3, 12vmin);
+  grid-template-columns: repeat(3, 12vmin);
   grid-gap: 0.5vmin;
 }
 
 div {
   background-color: #D9FFEE;
   font-size: 8vmin;
-  text-align: center;
+}
+
+.token {
   vertical-align: middle;
+  width: 64px;
 }
