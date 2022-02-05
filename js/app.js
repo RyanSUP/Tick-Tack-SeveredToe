@@ -1,14 +1,23 @@
 /**
- * [ ] Hide message when game starts
- * [ ] indicate player by adding a border to the current player's token (in the game title)
+ * [x] Hide message when game starts
+ * [x] indicate player by adding a border to the current player's token (in the game title)
  * [ ] render tie on tie game
  * [ ] crown the winner
  * [ ] after a delay, fade all images on the board
  * [ ] Fill board with 'N E W G A M E
- * [x] fix bug that displays the player picker message on player 2's turn
- * [x] fix bug that allows you to click unselected game token during game
- * [x] stop turn indicator from showing if the game is over
  */
+
+/*------------------------ Cached Element References ------------------------*/
+const sqrElements = document.querySelectorAll('.sq') // Returns a node-list
+const message = document.querySelector('#message')
+const boardSection = document.querySelector('.board')
+const replayBtn = document.querySelector('#replay')
+const header = document.querySelector('header')
+
+/*----------------------------- Event Listeners -----------------------------*/
+boardSection.addEventListener('click', handleBoardClick)
+replayBtn.addEventListener('click', init)
+header.addEventListener('click', setGameToken)
 
 
 /*-------------------------------- Constants --------------------------------*/
@@ -20,7 +29,7 @@
     ]
 */
 const winningCombinations = [
-    [0, 1, 2],
+    [0,1,2],
     [3,4,5],
     [6,7,8],
     [0,3,6],
@@ -30,31 +39,24 @@ const winningCombinations = [
     [2,4,6],
 ]
 
+// Convert htmlCollection to array 
+// (https://www.gavsblog.com/blog/htmlcollection-foreach-loop-convert-object-to-array-javascript)
+const headerChildren = [...header.children]
 
 /*---------------------------- Variables (state) ----------------------------*/
 // turn 1 = X, turn -1 = O
 let boardSquares, turn, winState, firstPlayerToken, secondPlayerToken
 
-/*------------------------ Cached Element References ------------------------*/
-const sqrElements = document.querySelectorAll('.sq') // Returns a node-list
-const message = document.querySelector('#message')
-const boardSection = document.querySelector('.board')
-const replayBtn = document.querySelector('#replay')
-const gameTokens = document.querySelector('header')
-
-/*----------------------------- Event Listeners -----------------------------*/
-boardSection.addEventListener('click', handleBoardClick)
-replayBtn.addEventListener('click', init)
-gameTokens.addEventListener('click', setGameToken)
+/*-------------------------------- Main --------------------------------*/
+init()
 
 /*-------------------------------- Functions --------------------------------*/
 function init() {
     // init boardSquares to 9 nulls
     boardSquares = [null, null, null, null, null, null, null, null, null,]
-
     
     // init tokens
-    makeTokensSelectable()
+    makeHeaderChildrenSelectable()
     firstPlayerToken = null
     secondPlayerToken = null
 
@@ -69,17 +71,14 @@ function init() {
 }
 
 // Gives the game tokens at the top of the screen a class. This lets the players choose again if the game is reset.
-function makeTokensSelectable() {
-    // Convert htmlCollection to array 
-    // https://www.gavsblog.com/blog/htmlcollection-foreach-loop-convert-object-to-array-javascript
-    let arr = [...gameTokens.children]
-    arr.forEach(child => child.className = 'selectable')
+function makeHeaderChildrenSelectable() {
+    headerChildren.forEach(child => child.className = 'selectable')
 }
+
 
 function render() {
     renderMessage()
     renderReplayButton()
-    renderTurnIndicator()
     renderBoard()
 }
 
@@ -95,37 +94,23 @@ function renderBoard() {
 }
 
 function renderTurnIndicator() {
-    if(winState !== null) {
-        // Game over, clear the indicator
-        clearTurnIndicators()
-    } else if(firstPlayerToken !== null && secondPlayerToken !== null) {
-        (turn > 0) ? indicatePlayer1Turn() : indicatePlayer2Turn()
-    }
-}
-
-function indicatePlayer2Turn() {
-    document.querySelector('.player1').classList.remove('turn')
-    document.querySelector('.player-1').classList.add('turn')
-}
-
-function indicatePlayer1Turn() {
-    document.querySelector('.player-1').classList.remove('turn')
-    document.querySelector('.player1').classList.add('turn')
-}
-
-function clearTurnIndicators() {
-    document.querySelector('.player-1').classList.remove('turn')
-    document.querySelector('.player1').classList.remove('turn')
+    headerChildren.forEach(child => {
+        if(turn > 0 ) {
+            child.style.opacity = (child.className.includes('player1') === false) ? '50%' : '100%'
+        } else {
+            child.style.opacity = (child.className.includes('player-1') === false) ? '50%' : '100%'
+        }
+    })
 }
 
 function renderMessage() {
     if(firstPlayerToken === null || secondPlayerToken === null) {
         // New game, show message and wait for players to select tokens
-        removeMessageHidden()
         renderPlayerSelectMessage()
     } else if(winState === null) {
         // Game in progress, hide message
-        setMessageHidden()
+        message.textContent = 'Go!'
+        renderTurnIndicator()
     } else if(winState === 'T') {
         // Tie game, show the tie!
         message.textContent = 'Tie game!'
@@ -154,15 +139,7 @@ function renderReplayButton() {
 }
 
 function bounceMessage() {
-    message.classList.add("animate__bounce", "animate__repeat-3", "animate__slow")
-}
-
-function setMessageHidden() {
-    message.setAttribute('hidden', true)
-}
-
-function removeMessageHidden() {
-    message.removeAttribute('hidden')
+    message.classList.add("animate__bounce", "animate__repeat-1", "animate__slow")
 }
 
 function handleBoardClick(eventObject) {
@@ -239,7 +216,3 @@ function setGameToken(eventObject) {
     }
     render()
 }
-
-
-/*-------------------------------- Main --------------------------------*/
-init()

@@ -17,13 +17,14 @@ body {
   font-size: 50px;
   color: white;
   font-family: 'Lobster', cursive;
+  /* Setting a height stop some of the elements from shimmying */
+  height: 68px;
 }
 
 header img{
   margin: 100px 20px 0;
   padding-bottom: 5px;
   width: 96px;
-  border-bottom: 12px solid inherit;
 }
 
 section.board {
@@ -56,8 +57,4 @@ div:hover {
 .token {
   vertical-align: middle;
   width: 64px;
-}
-
-.turn {
-  border-bottom: 12px solid #ff686b;
 }
