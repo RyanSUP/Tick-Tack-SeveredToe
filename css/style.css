@@ -13,13 +13,13 @@ body {
 }
 
 #message {
-  margin: 75px 0 50px 0;
+  margin: 60px 0 70px 0;
   font-size: 50px;
   color: #D9FFEE;
   font-family: 'Lobster', cursive;
 }
 
-.title img {
+.token-select img{
   margin: 100px 20px 0 ;
   width: 96px;
 }
@@ -35,6 +35,14 @@ section.board {
 div {
   background-color: #D9FFEE;
   font-size: 8vmin;
+}
+
+span {
+  color: #FFDDD9;
+}
+
+div:hover {
+  background-color: #FFDDD9;
 }
 
 .token {
