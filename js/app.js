@@ -1,11 +1,11 @@
 /**
  * [ ] Replace the x and o with images
- * [ ] Allow user to select tic, tac, or toe as a token
- *      [ ] Users should not be able to select the same token
- *      [ ] Users cannot pick a new token once the game starts
- *      [ ] Prompt user with message (bonus points for using animation!)
- * [ ] Update message to display the token instead of x o
- * [ ] 
+ * [x] Allow user to select tic, tac, or toe as a token
+ *      [x] Users should not be able to select the same token
+ *      [x] Users cannot pick a new token once the game starts
+ *      [x] Prompt user with message (bonus points for using animation!)
+ * [ ] Update message to display the token instead of x o (I think I;m going to underline the current player)
+ * [ ] Give player token a classname of token / remove selectable (try setting tokens = to html element instead of outerhtml)
  */
 
 
@@ -35,7 +35,7 @@ let boardSquares, turn, winState, firstPlayerToken, secondPlayerToken
 
 /*------------------------ Cached Element References ------------------------*/
 const sqrElements = document.querySelectorAll('.sq') // Returns a node-list
-const gameStatus = document.querySelector('#message')
+const message = document.querySelector('#message')
 const boardSection = document.querySelector('.board')
 const replayBtn = document.querySelector('#replay')
 const gameTokens = document.querySelector('.token-select')
@@ -49,6 +49,8 @@ gameTokens.addEventListener('click', setGameToken)
 function init() {
     // init boardSquares to 9 nulls
     boardSquares = [null, null, null, null, null, null, null, null, null,]
+
+    initGameTokens()
 
     // init tokens
     firstPlayerToken = null
@@ -64,9 +66,18 @@ function init() {
     render()
 }
 
+function initGameTokens() {
+    // Convert htmlColelction to array 
+    // https://www.gavsblog.com/blog/htmlcollection-foreach-loop-convert-object-to-array-javascript
+    let arr = [...gameTokens.children]
+    arr.forEach(child => {
+        child.className = 'selectable'
+    })
+
+}
 
 function render() {
-    renderGameStateMessage()
+    renderMessage()
     renderReplayButton()
     renderBoard()
 }
@@ -75,24 +86,25 @@ function renderBoard() {
     sqrElements.forEach((sqr, idx) => {
         let boardSqr = boardSquares[idx]
         if(boardSqr) { // not null
-            sqr.textContent = (boardSqr > 0 ) ?  'X' : 'O'
+            sqr.innerHTML = (boardSqr > 0 ) ?  firstPlayerToken : secondPlayerToken
         } else {
-            sqr.textContent = ''
+            sqr.innerHTML = ''
         }
     })
 }
 
-function renderGameStateMessage() {
+function renderMessage() {
     if(firstPlayerToken === null) {
-        gameStatus.innerHTML = '<span>^ </span>Player 1, pick!<span> ^</span>'
+        message.innerHTML = '<span>^ </span>Player 1, pick!<span> ^</span>'
+        bounceMessage() // Add animated prompt for selecting players.
     } else if(secondPlayerToken === null) {
-        gameStatus.innerHTML = '<span>^ </span>Player 2, pick!<span> ^</span>'
+        message.innerHTML = '<span>^ </span>Player 2, pick!<span> ^</span>'
     } else if(winState === null) {
-        gameStatus.textContent = (turn > 0) ? "X's turn!" : "O's turn!"
+        message.textContent = (turn > 0) ? "X's turn!" : "O's turn!"
     } else if(winState === 'T'){
-        gameStatus.textContent = 'Tie game!'
+        message.textContent = 'Tie game!'
     } else {
-        gameStatus.textContent = (winState > 0) ? "X wins!" : "O's wins!"
+        message.textContent = (winState > 0) ? "X wins!" : "O's wins!"
         confetti.start(2000)
     }
 }
@@ -103,6 +115,21 @@ function renderReplayButton() {
     } else {
         replayBtn.removeAttribute('hidden')
     }
+}
+
+function bounceMessage() {
+    message.classList.add("animate__bounce", "animate__repeat-3", "animate__slow")
+}
+
+function resetBouncingMessage() {
+    // Don't animate forever...
+    message.classList.remove("animate__repeat-3", "animate__slow")
+    // ... but animate 2 more times
+    // message.classList.add("animate__repeat-2")
+}
+
+function hideMessage() {
+    
 }
 
 function handleBoardClick(eventObject) {
@@ -148,16 +175,24 @@ function getWinner() {
 
 function setGameToken(eventObject) {
     if(eventObject.target.className === 'selectable') {
-        if(turn > 0) {
-            firstPlayerToken = eventObject.target.outerHTML
-        } else {
-            secondPlayerToken = eventObject.target.outerHTML
-        }
+        // Remove selectable class from the selected token, this way it can't be chosen twice.
         eventObject.target.className = ''
+
+        // Setup the player token
+        let chosenToken = eventObject.target.cloneNode()
+        chosenToken.className = 'token'
+        if(turn > 0) {
+            firstPlayerToken = chosenToken.outerHTML
+        } else {
+            secondPlayerToken = chosenToken.outerHTML
+        }
+
+        // Go to the next turn so player 2 can select their token.
         nextTurn()
     }
     render()
 }
+
 
 /*-------------------------------- Main --------------------------------*/
 init()
