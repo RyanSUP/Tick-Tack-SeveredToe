@@ -1,6 +1,10 @@
 /**
  * [ ] Hide message when game starts
  * [ ] indicate player by adding a border to the current player's token (in the game title)
+ * [ ] render tie on tie game
+ * [ ] render token and crown when winner
+ * [ ] after a delay, fade all images on the board
+ * [ ] Fill board with 'N E W G A M E
  */
 
 

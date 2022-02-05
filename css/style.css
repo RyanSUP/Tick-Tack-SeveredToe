@@ -13,7 +13,7 @@ body {
 }
 
 #message {
-  margin: 60px 0 70px 0;
+  margin: 60px 0 40px 0;
   font-size: 50px;
   color: white;
   font-family: 'Lobster', cursive;
@@ -26,6 +26,8 @@ header img{
 
 section.board {
   margin: 0 auto;
+  border: 4px dotted white;
+  padding: 10px;
   display: grid;
   grid-template-rows: repeat(3, 12vmin);
   grid-template-columns: repeat(3, 12vmin);
