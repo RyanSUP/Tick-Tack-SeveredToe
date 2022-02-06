@@ -1,7 +1,9 @@
 /**
- * [ ] render tie on tie game
+ * [x] render tie on tie game
  * [ ] crown the winner
- * [ ] Fill board with 'N E W G A M E
+ * [ ] Fill board with 'N E W G A M E / Reset
+ * [X] Can't replay when game is a tie
+ * [x] Ties break off of tokens when the screen shrinkts. This is because tie is a smaller div inside the header.
  */
 
 /*------------------------ Cached Element References ------------------------*/
@@ -10,7 +12,7 @@ const message = document.querySelector('#message')
 const boardSection = document.querySelector('.board')
 const replayBtn = document.querySelector('#replay')
 const header = document.querySelector('header')
-const ties = document.querySelector('.ties')     
+const ties = document.querySelector('.ties')
 
 /*----------------------------- Event Listeners -----------------------------*/
 boardSection.addEventListener('click', handleBoardClick)
@@ -55,6 +57,7 @@ function init() {
     boardSquares = [null, null, null, null, null, null, null, null, null,]
     
     // Hide the ties (when replay button is pressed)
+    hideTies()
 
     // init tokens
     makeHeaderChildrenSelectable()
@@ -83,6 +86,9 @@ function renderTie() {
     ties.removeAttribute('hidden')
 }
 
+function hideTies() {
+    ties.setAttribute('hidden', true)
+}
 
 
 function render() {
@@ -105,9 +111,9 @@ function renderBoard() {
 function renderTurnIndicator() {
     headerChildren.forEach(child => {
         if(turn > 0 ) {
-            child.style.opacity = (child.className.includes('player1') === false) ? '50%' : '100%'
+            child.style.opacity = (child.className.includes('player1') === false) ? '40%' : '100%'
         } else {
-            child.style.opacity = (child.className.includes('player-1') === false) ? '50%' : '100%'
+            child.style.opacity = (child.className.includes('player-1') === false) ? '40%' : '100%'
         }
     })
 }
@@ -122,7 +128,7 @@ function renderMessage() {
         renderPlayerSelectMessage()
     } else if(winState === null) {
         // Game in progress, hide message
-        message.textContent = 'Go!'
+        message.textContent = ''
         renderTurnIndicator()
     } else if(winState === 'T') {
         // Tie game, show the tie!
@@ -138,23 +144,20 @@ function renderMessage() {
 
 function renderPlayerSelectMessage() {
     bounceMessage() // Add animated prompt for selecting players.
-    if(firstPlayerToken === null) {
-        message.innerHTML = '<span>^ </span>Player 1, pick!<span> ^</span>'
-    } else {
-        message.innerHTML = '<span>^ </span>Player 2, pick!<span> ^</span>'
-    } 
+    let player = (firstPlayerToken === null) ? 'Player 1' : 'Player 2'
+    message.innerHTML = `${player}, pick a token!` 
 }
 
 function renderReplayButton() {
     if(winState === null) {
-        replayBtn.setAttribute('hidden', true)
+        replayBtn.style.visibility = 'hidden'
     } else {
-        replayBtn.removeAttribute('hidden')
+        replayBtn.style.visibility = 'visible'
     }
 }
 
 function bounceMessage() {
-    message.classList.add("animate__bounce", "animate__repeat-1", "animate__slow")
+    message.classList.add("animate__bounce", "animate__repeat-2", "animate__slow")
 }
 
 function handleBoardClick(eventObject) {
@@ -214,7 +217,7 @@ function setGameToken(eventObject) {
         let chosenToken = eventObject.target.cloneNode()
         chosenToken.classList.add("token")
 
-        // Animate selected token. Needs to be done last so the chosen token doesn't copy the class
+        // Animate selected token needs to be done last so chosenToken doesn't copy the animation class.
         eventObject.target.classList.add('animate__heartBeat')
     
         
