@@ -21,13 +21,14 @@ body {
   height: 68px;
 }
 
-.game-tokens img{
+.stage img{
   margin: 0 20px;
   padding-bottom: 5px;
   width: 96px;
 }
 
 #replay {
+  visibility: hidden;
   background: none;
   border: none;
   font-size: 26px;
@@ -37,7 +38,7 @@ body {
   width: 150px;
 }
 
-.game-tokens {
+.stage {
   position: relative;
   margin: 0 0 15px;
 }
@@ -57,7 +58,6 @@ body {
 
 .ties {
   position: absolute;
-  left: 50%;
   top: 15px;
   transform: translate(-50%, 0);
   width: 100%;
@@ -90,7 +90,7 @@ span {
   background-color: inherit;
 }
 
-.token {
+.player-avatar {
   vertical-align: middle;
-  width: 64px;
+  width: 80%;
 }
