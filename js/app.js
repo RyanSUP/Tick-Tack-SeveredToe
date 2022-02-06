@@ -1,19 +1,13 @@
-/**
- * [x] render tie on tie game
- * [ ] crown the winner
- * [ ] Fill board with 'N E W G A M E / Reset
- * [X] Can't replay when game is a tie
- * [x] Ties break off of tokens when the screen shrinkts. This is because tie is a smaller div inside the header.
- */
+
 
 /*------------------------ Cached Element References ------------------------*/
 const sqrElements = document.querySelectorAll('.sq') // Returns a node-list
 const message = document.querySelector('#message')
 const boardSection = document.querySelector('.board')
 const replayBtn = document.querySelector('#replay')
-const header = document.querySelector('header')
+const header = document.querySelector('.game-tokens')
 const ties = document.querySelector('.ties')
-
+const crown = document.querySelector('.crown')
 /*----------------------------- Event Listeners -----------------------------*/
 boardSection.addEventListener('click', handleBoardClick)
 replayBtn.addEventListener('click', init)
@@ -42,7 +36,11 @@ const winningCombinations = [
 // Convert htmlCollection to array 
 // (https://www.gavsblog.com/blog/htmlcollection-foreach-loop-convert-object-to-array-javascript)
 const headerChildren = [...header.children]
-headerChildren.pop() // Get rid of the duplicate ties (workaround for now)
+
+// This is a janky way around needing more cached references - grab everything in the div and trash what I dont want.
+// I need to fix this.
+headerChildren.pop()
+headerChildren.shift()
 
 /*---------------------------- Variables (state) ----------------------------*/
 // turn 1 = X, turn -1 = O
@@ -58,6 +56,8 @@ function init() {
     
     // Hide the ties (when replay button is pressed)
     hideTies()
+    hideCrown()
+    setAllHeaderChildrenVisible()
 
     // init tokens
     makeHeaderChildrenSelectable()
@@ -88,6 +88,18 @@ function renderTie() {
 
 function hideTies() {
     ties.setAttribute('hidden', true)
+}
+
+function renderCrown() {
+    crown.removeAttribute('hidden')
+}
+
+function hideCrown() {
+    crown.setAttribute('hidden', true)
+}
+
+function setAllHeaderChildrenVisible() {
+    headerChildren.forEach(child => child.removeAttribute('hidden'))
 }
 
 
@@ -137,7 +149,8 @@ function renderMessage() {
         renderTie()
     } else {
         // Crown the winner!
-        message.textContent = (winState > 0) ? "X wins!" : "O's wins!"
+        renderCrown()
+        renderWinnerOnly()
         confetti.start(2000)
     }
 }
@@ -149,11 +162,7 @@ function renderPlayerSelectMessage() {
 }
 
 function renderReplayButton() {
-    if(winState === null) {
-        replayBtn.style.visibility = 'hidden'
-    } else {
-        replayBtn.style.visibility = 'visible'
-    }
+    replayBtn.style.visibility = (winState === null) ? 'hidden' : 'visible'
 }
 
 function bounceMessage() {
@@ -161,7 +170,7 @@ function bounceMessage() {
 }
 
 function handleBoardClick(eventObject) {
-    let id = stripElementIdForIndex(eventObject.target)
+    let id = parseInt(eventObject.target.id.slice(2))
 
     // players haven't picked tokens
     if(firstPlayerToken === null || secondPlayerToken === null) {
@@ -183,11 +192,17 @@ function handleBoardClick(eventObject) {
     render()
 }
 
-function stripElementIdForIndex(element) {
-    return parseInt(element.id.slice(2))    
-}
+function nextTurn() { turn *= -1} 
 
-function nextTurn() { turn *= -1}
+function renderWinnerOnly() {
+    // if the winstate is 1, hide everything that doesn't have a class of player1
+    let winnerClass = (winState > 0) ? 'player1' : 'player-1'
+    headerChildren.forEach(child => {
+        if(!child.className.includes(winnerClass)) {
+            child.setAttribute('hidden', true)
+        }
+    })
+}
 
 function getWinner() {
     for(let i = 0; i < winningCombinations.length; i++) {

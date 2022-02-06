@@ -21,7 +21,7 @@ body {
   height: 68px;
 }
 
-header img{
+.game-tokens img{
   margin: 0 20px;
   padding-bottom: 5px;
   width: 96px;
@@ -37,15 +37,28 @@ header img{
   width: 150px;
 }
 
-header {
+.game-tokens {
   position: relative;
   margin: 0 0 15px;
+}
+
+.crown img {
+  width: 54px;
+  padding: 0;
+}
+
+.crown {
+  position: absolute;
+  left: 50%;
+  top: -48px;
+  transform: translate(-50%, 0);
+  width: 100%;
 }
 
 .ties {
   position: absolute;
   left: 50%;
-  top: 30px;
+  top: 15px;
   transform: translate(-50%, 0);
   width: 100%;
 }
