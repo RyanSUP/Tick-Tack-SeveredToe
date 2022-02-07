@@ -22,6 +22,7 @@ body {
 }
 
 .stage img{
+  cursor: pointer;
   margin: 0 20px;
   padding-bottom: 5px;
   width: 96px;
@@ -93,4 +94,25 @@ span {
 .player-avatar {
   vertical-align: middle;
   width: 80%;
+}
+
+footer {
+  position: absolute;
+  bottom: 15px;
+  width: 100%;
+}
+
+a {
+  color: snow;
+  font-family: 'Lobster', cursive;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.return-to-game {
+  margin: 80px;
+  color: snow;
+  font-family: 'Lobster', cursive;
+  text-decoration: underline;
+  font-size: 34px;
 }
