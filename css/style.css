@@ -37,6 +37,7 @@ body {
   margin: 0 auto 20px;
   color: snow;
   width: 150px;
+  cursor: pointer;
 }
 
 .stage {
