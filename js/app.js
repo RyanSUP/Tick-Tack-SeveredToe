@@ -132,11 +132,9 @@ function getWinState() {
 
 function handleReplay() {
     resetHTMLCSS()
-    // Animations break on the next replay without this quick delay. Something to do with the event loop?
-    setTimeout(() => {
-        wobbleBoard()
-        init()
-    }, 5)
+    void message.offsetHeight
+    wobbleBoard()
+    init()
 }
 
 function resetHTMLCSS() {
